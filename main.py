@@ -195,6 +195,10 @@ class Snake(QWidget) :
             self.right = False
             self.up = False
             self.down = True
+            self.bodyCount = 4
+            for i in range(2500):
+                self.x[i] = 0
+                self.y[i] = 0
             for i in range(self.bodyCount):
                 self.x[i] = 20
                 self.y[i] = 70 - i*10
