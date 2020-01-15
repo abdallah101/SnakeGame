@@ -70,8 +70,8 @@ class Snake(QWidget) :
         self.x = []
         self.y = []
         #first random position of goal
-        self.goal_x = (math.floor(random.randint(1,499)/10))*10
-        self.goal_y = (math.floor(random.randint(1,499)/10))*10
+        self.goal_x = 10
+        self.goal_y = 10
        
         self.justMoved = False
         
@@ -153,8 +153,8 @@ class Snake(QWidget) :
         
     def timing (self):
         
-        it = 0
-        delay = 40
+        it = 1
+        delay = 50
         try:    
             #print("painting")
             self.AI()
@@ -589,6 +589,23 @@ class Snake(QWidget) :
             self.goal_x = (math.floor(random.randint(1,499)/10))*10
             self.goal_y = (math.floor(random.randint(1,499)/10))*10
             
+            #tried cheating with the goal to make it easier for the snake, better performance by double the snake length
+            '''
+            if(self.goal_x < 250):
+                if(self.goal_y<250):
+                    self.goal_x = (math.floor(random.randint(50,50+self.bodyCount)/10))*10
+                    self.goal_y = (math.floor(random.randint(450-self.bodyCount,450)/10))*10
+                else:
+                    self.goal_x = (math.floor(random.randint(450-self.bodyCount,450)/10))*10
+                    self.goal_y = (math.floor(random.randint(450-self.bodyCount,450)/10))*10
+            else:
+                if(self.goal_y <250):
+                    self.goal_x = (math.floor(random.randint(50,50+self.bodyCount)/10))*10
+                    self.goal_y = (math.floor(random.randint(50,50+self.bodyCount)/10))*10
+                else:
+                    self.goal_x = (math.floor(random.randint(450-self.bodyCount,450)/10))*10
+                    self.goal_y = (math.floor(random.randint(50,50+self.bodyCount)/10))*10
+           '''
             for i in range(self.bodyCount):
                 if(self.x[i] == self.goal_x and self.y[i] == self.goal_y):
                     NotOn = False
