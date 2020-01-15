@@ -1,12 +1,9 @@
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 import sys
-import os
-from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QImage
 from PyQt5.QtCore import QTimer
 from PyQt5.QtGui import QPainter, QColor, QPen
-from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 import random
 import math
@@ -86,10 +83,13 @@ class Snake(QWidget) :
         self.averagebody = 0
         
         #variables generically modified
-        self.stepsx = 6
-        self.stepsy = 6
-        self.rand = self.bodyCount
-        self.caught = False
+        #self.stepsx = 6
+        #self.stepsy = 6
+        #self.rand = self.bodyCount
+        #self.caught = False
+        self.dist = 30
+        self.avgdist = 0
+        self.prevdist = 0
         
         if(self.goal.isNull == True):
             print("true")
@@ -153,8 +153,8 @@ class Snake(QWidget) :
         
     def timing (self):
         
-        it = 1
-        delay = 50
+        it = 50
+        delay = 0.1
         try:    
             #print("painting")
             self.AI()
@@ -167,6 +167,8 @@ class Snake(QWidget) :
             if(self.GameOver == False):
                 QTimer.singleShot(delay, self.timing)
             elif(self.GameOver == True and self.iterations <= it):
+                
+                bc = self.bodyCount
                 
                 self.GameOver = False
                 self.left = False
@@ -188,6 +190,29 @@ class Snake(QWidget) :
                         self.x[i] = 20
                         self.y[i] = 70 - i*10
                 
+                avg = self.avgdist*(self.iterations - 1)
+                self.avgdist = (bc + avg)/self.iterations
+                
+                if(avg/(self.iterations-1) < self.avgdist):
+                    if(self.prevdist < self.dist):
+                        self.prevdist = self.dist
+                        self.dist = self.dist + 10
+                    else:
+                        self.prevdist = self.dist
+                        self.dist = self.dist - 10
+                else:
+                    if(self.prevdist < self.dist):
+                        self.prevdist = self.dist
+                        self.dist = self.dist - 10
+                    else:
+                        self.prevdist = self.dist
+                        self.dist = self.dist + 10
+                
+                print("Gen" + str(self.iterations) + ": distance x used: " + str(self.dist) + ", previous distance used: " + str(self.prevdist) + "\nAvg body: "
+                      + str(self.avgdist) + ", body now: " + str(bc))
+                    
+                
+                
                 self.timing()
                 
             elif(self.iterations > it):
@@ -205,7 +230,7 @@ class Snake(QWidget) :
             
                 print("(Gen" + str(self.iterations) + ") " + "average longest x: " + str(math.floor(self.average_x)) + ", average longest y: " + 
                       str(math.floor(self.average_y)) + ", average body: " + str(math.floor(self.averagebody)))
-                print("Head to Tail distance: " + str(HtoT))
+                print("Distx Used: " + str(self.dist))
                 
             
             
@@ -390,7 +415,7 @@ class Snake(QWidget) :
                 
         '''
         
-        if (abs(distx) >= abs(disty)):
+        if (abs(distx) > self.dist ):
             
             if(distx > 0):
                 
